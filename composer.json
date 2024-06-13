@@ -1,0 +1,15 @@
+{
+    "name": "jerem/designpatternpayment",
+    "autoload": {
+        "psr-4": {
+            "Jerem\\Designpatternpayment\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Misokka",
+            "email": "jeremy.caron.labalette@gmail.com"
+        }
+    ],
+    "require": {}
+}
