@@ -7,6 +7,7 @@ namespace Jerem\Designpatternpayment;
  */
 class PaymentManager {
     private $interfaces = [];
+    private $selectedInterface;
 
     /**
      * Ajouter une interface de paiement.
@@ -37,6 +38,40 @@ class PaymentManager {
     }
 
     /**
+     * Sélectionner dynamiquement une interface de paiement.
+     * @param string $name
+     */
+    public function selectInterface($name) {
+        if (isset($this->interfaces[$name])) {
+            $this->selectedInterface = $this->interfaces[$name];
+        }
+    }
+
+    /**
+     * Exécuter une transaction de paiement via l'interface sélectionnée.
+     * @param Transaction $transaction
+     * @return Transaction|null
+     */
+    public function executeSelectedTransaction(Transaction $transaction) {
+        if ($this->selectedInterface) {
+            return $this->selectedInterface->executeTransaction($transaction);
+        }
+        return null;
+    }
+
+    /**
+     * Annuler une transaction de paiement via l'interface sélectionnée.
+     * @param Transaction $transaction
+     * @return Transaction|null
+     */
+    public function cancelSelectedTransaction(Transaction $transaction) {
+        if ($this->selectedInterface) {
+            return $this->selectedInterface->cancelTransaction($transaction);
+        }
+        return null;
+    }
+
+    /**
      * Exécuter une transaction de paiement via l'interface spécifiée.
      * @param string $name
      * @param Transaction $transaction
@@ -60,6 +95,17 @@ class PaymentManager {
             return $this->interfaces[$name]->cancelTransaction($transaction);
         }
         return null;
+    }
+
+    /**
+     * Créer une transaction de manière flexible.
+     * @param float $amount
+     * @param string $currency
+     * @param string $description
+     * @return Transaction
+     */
+    public function createTransaction($amount, $currency, $description) {
+        return new Transaction($amount, $currency, $description);
     }
 }
 ?>
