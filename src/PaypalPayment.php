@@ -4,9 +4,8 @@ namespace Jerem\Designpatternpayment;
 /**
  * Classe PayPalPayment
  * Implémente PaymentInterface pour les paiements PayPal.
- * Design Pattern utilisé : Implémentation d'Interface
  */
-class PayPalPayment implements PaymentInterface {
+class PaypalPayment implements PaymentInterface {
     private $clientId;
     private $clientSecret;
 
@@ -21,24 +20,25 @@ class PayPalPayment implements PaymentInterface {
 
     /**
      * Exécuter une transaction de paiement PayPal.
-     * @param float $amount
-     * @param string $currency
-     * @param string $description
-     * @return array
+     * @param Transaction $transaction
+     * @return Transaction
      */
-    public function executeTransaction($amount, $currency, $description) {
+    public function executeTransaction(Transaction $transaction) {
         // Simulation d'une transaction PayPal
-        return ['status' => 'success', 'transactionId' => '12345'];
+        $transaction->setTransactionId('12345');
+        $transaction->setStatus('success');
+        return $transaction;
     }
 
     /**
      * Annuler une transaction de paiement PayPal.
-     * @param string $transactionId
-     * @return array
+     * @param Transaction $transaction
+     * @return Transaction
      */
-    public function cancelTransaction($transactionId) {
+    public function cancelTransaction(Transaction $transaction) {
         // Simulation de l'annulation d'une transaction PayPal
-        return ['status' => 'cancelled', 'transactionId' => $transactionId];
+        $transaction->setStatus('cancelled');
+        return $transaction;
     }
 }
 ?>
