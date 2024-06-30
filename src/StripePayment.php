@@ -4,7 +4,6 @@ namespace Jerem\Designpatternpayment;
 /**
  * Classe StripePayment
  * Implémente PaymentInterface pour les paiements Stripe.
- * Design Pattern utilisé : Implémentation d'Interface
  */
 class StripePayment implements PaymentInterface {
     private $apiKey;
@@ -19,24 +18,25 @@ class StripePayment implements PaymentInterface {
 
     /**
      * Exécuter une transaction de paiement Stripe.
-     * @param float $amount
-     * @param string $currency
-     * @param string $description
-     * @return array
+     * @param Transaction $transaction
+     * @return Transaction
      */
-    public function executeTransaction($amount, $currency, $description) {
+    public function executeTransaction(Transaction $transaction) {
         // Simulation d'une transaction Stripe
-        return ['status' => 'success', 'transactionId' => '67890'];
+        $transaction->setTransactionId('67890');
+        $transaction->setStatus('success');
+        return $transaction;
     }
 
     /**
      * Annuler une transaction de paiement Stripe.
-     * @param string $transactionId
-     * @return array
+     * @param Transaction $transaction
+     * @return Transaction
      */
-    public function cancelTransaction($transactionId) {
+    public function cancelTransaction(Transaction $transaction) {
         // Simulation de l'annulation d'une transaction Stripe
-        return ['status' => 'cancelled', 'transactionId' => $transactionId];
+        $transaction->setStatus('cancelled');
+        return $transaction;
     }
 }
 ?>
