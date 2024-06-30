@@ -5,9 +5,11 @@ use Jerem\Designpatternpayment\PaymentManager;
 use Jerem\Designpatternpayment\PayPalPayment;
 use Jerem\Designpatternpayment\StripePayment;
 use Jerem\Designpatternpayment\Transaction;
+use Jerem\Designpatternpayment\Notifier;
 
 // Créer une instance de PaymentManager
 $paymentManager = new PaymentManager();
+$notifier = new Notifier();
 
 // Ajouter l'interface PayPal
 $paypal = new PayPalPayment();
@@ -19,25 +21,47 @@ $stripe = new StripePayment();
 $paymentManager->addInterface('stripe', $stripe);
 $paymentManager->initializeInterface('stripe', ['apiKey' => 'testApiKey']);
 
-// Créer une transaction PayPal
-$paypalTransaction = new Transaction(100, 'USD', 'Test PayPal Transaction');
-$paypalResult = $paymentManager->executeTransaction('paypal', $paypalTransaction);
+// Sélectionner dynamiquement l'interface PayPal
+$paymentManager->selectInterface('paypal');
+
+// Créer une transaction de manière flexible
+$transaction = $paymentManager->createTransaction(100, 'USD', 'Dynamic PayPal Transaction');
+
+// Exécuter la transaction via l'interface sélectionnée
+$paypalResult = $paymentManager->executeSelectedTransaction($transaction);
 echo "PayPal Transaction Result: ";
 print_r($paypalResult);
 
-// Créer une transaction Stripe
-$stripeTransaction = new Transaction(200, 'USD', 'Test Stripe Transaction');
-$stripeResult = $paymentManager->executeTransaction('stripe', $stripeTransaction);
-echo "Stripe Transaction Result: ";
-print_r($stripeResult);
+// Notifier des tiers de l'état de la transaction
+$notifier->notify($paypalResult);
 
-// Annuler une transaction PayPal
-$paypalCancelResult = $paymentManager->cancelTransaction('paypal', $paypalTransaction);
+// Annuler la transaction via l'interface sélectionnée
+$paypalCancelResult = $paymentManager->cancelSelectedTransaction($transaction);
 echo "PayPal Cancel Transaction Result: ";
 print_r($paypalCancelResult);
 
-// Annuler une transaction Stripe
-$stripeCancelResult = $paymentManager->cancelTransaction('stripe', $stripeTransaction);
+// Notifier des tiers de l'état de la transaction annulée
+$notifier->notify($paypalCancelResult);
+
+// Sélectionner dynamiquement l'interface Stripe
+$paymentManager->selectInterface('stripe');
+
+// Créer une transaction de manière flexible
+$transaction = $paymentManager->createTransaction(200, 'USD', 'Dynamic Stripe Transaction');
+
+// Exécuter la transaction via l'interface sélectionnée
+$stripeResult = $paymentManager->executeSelectedTransaction($transaction);
+echo "Stripe Transaction Result: ";
+print_r($stripeResult);
+
+// Notifier des tiers de l'état de la transaction
+$notifier->notify($stripeResult);
+
+// Annuler la transaction via l'interface sélectionnée
+$stripeCancelResult = $paymentManager->cancelSelectedTransaction($transaction);
 echo "Stripe Cancel Transaction Result: ";
 print_r($stripeCancelResult);
+
+// Notifier des tiers de l'état de la transaction annulée
+$notifier->notify($stripeCancelResult);
 ?>
