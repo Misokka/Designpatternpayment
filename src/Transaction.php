@@ -6,6 +6,11 @@ namespace Jerem\Designpatternpayment;
  * Représente une transaction de paiement.
  */
 class Transaction {
+    const STATUS_PENDING = 'pending';
+    const STATUS_SUCCESS = 'success';
+    const STATUS_FAILED = 'failed';
+    const STATUS_CANCELLED = 'cancelled';
+
     private $amount;
     private $currency;
     private $description;
@@ -22,7 +27,7 @@ class Transaction {
         $this->amount = $amount;
         $this->currency = $currency;
         $this->description = $description;
-        $this->status = 'pending';
+        $this->status = self::STATUS_PENDING;
         $this->transactionId = null;
     }
 
