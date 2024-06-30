@@ -15,18 +15,16 @@ interface PaymentInterface {
 
     /**
      * Exécuter une transaction de paiement.
-     * @param float $amount
-     * @param string $currency
-     * @param string $description
-     * @return array
+     * @param Transaction $transaction
+     * @return Transaction
      */
-    public function executeTransaction($amount, $currency, $description);
+    public function executeTransaction(Transaction $transaction);
 
     /**
      * Annuler une transaction de paiement.
-     * @param string $transactionId
-     * @return array
+     * @param Transaction $transaction
+     * @return Transaction
      */
-    public function cancelTransaction($transactionId);
+    public function cancelTransaction(Transaction $transaction);
 }
 ?>
