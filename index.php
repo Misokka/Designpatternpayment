@@ -27,41 +27,29 @@ $paymentManager->selectInterface('paypal');
 // Créer une transaction de manière flexible
 $transaction = $paymentManager->createTransaction(100, 'USD', 'Dynamic PayPal Transaction');
 
-// Exécuter la transaction via l'interface sélectionnée
-$paypalResult = $paymentManager->executeSelectedTransaction($transaction);
-echo "PayPal Transaction Result: ";
-print_r($paypalResult);
+function executerEtNotifierTransaction($paymentManager, $notifier, $transaction, $type) {
+    // Exécuter la transaction via l'interface sélectionnée
+    $result = $paymentManager->executeSelectedTransaction($transaction);
+    echo "{$type} Transaction Result:\n";
+    echo '<br>';
+    echo var_export($result, true) . "\n\n";
 
-// Notifier des tiers de l'état de la transaction
-$notifier->notify($paypalResult);
+    // Notifier des tiers de l'état de la transaction
+    $notifier->notify($result);
 
-// Annuler la transaction via l'interface sélectionnée
+    return $result;
+}
+
+$paypalResult = executerEtNotifierTransaction($paymentManager, $notifier, $transaction, 'PayPal');
+
+// Annuler la transaction PayPal via l'interface sélectionnée
 $paypalCancelResult = $paymentManager->cancelSelectedTransaction($transaction);
-echo "PayPal Cancel Transaction Result: ";
-print_r($paypalCancelResult);
+echo "PayPal Cancel Transaction Result:\n";
+echo var_export($paypalCancelResult, true) . "\n\n";
 
 // Notifier des tiers de l'état de la transaction annulée
 $notifier->notify($paypalCancelResult);
 
-// Sélectionner dynamiquement l'interface Stripe
 $paymentManager->selectInterface('stripe');
-
-// Créer une transaction de manière flexible
-$transaction = $paymentManager->createTransaction(200, 'USD', 'Dynamic Stripe Transaction');
-
-// Exécuter la transaction via l'interface sélectionnée
-$stripeResult = $paymentManager->executeSelectedTransaction($transaction);
-echo "Stripe Transaction Result: ";
-print_r($stripeResult);
-
-// Notifier des tiers de l'état de la transaction
-$notifier->notify($stripeResult);
-
-// Annuler la transaction via l'interface sélectionnée
-$stripeCancelResult = $paymentManager->cancelSelectedTransaction($transaction);
-echo "Stripe Cancel Transaction Result: ";
-print_r($stripeCancelResult);
-
-// Notifier des tiers de l'état de la transaction annulée
-$notifier->notify($stripeCancelResult);
+$stripeResult = executerEtNotifierTransaction($paymentManager, $notifier, $transaction, 'Stripe');
 ?>
