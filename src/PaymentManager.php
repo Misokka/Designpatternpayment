@@ -4,7 +4,6 @@ namespace Jerem\Designpatternpayment;
 /**
  * Classe PaymentManager
  * Gère les interfaces de paiement et permet leur utilisation unifiée.
- * Design Pattern utilisé : Façade
  */
 class PaymentManager {
     private $interfaces = [];
@@ -40,14 +39,12 @@ class PaymentManager {
     /**
      * Exécuter une transaction de paiement via l'interface spécifiée.
      * @param string $name
-     * @param float $amount
-     * @param string $currency
-     * @param string $description
-     * @return array|null
+     * @param Transaction $transaction
+     * @return Transaction|null
      */
-    public function executeTransaction($name, $amount, $currency, $description) {
+    public function executeTransaction($name, Transaction $transaction) {
         if (isset($this->interfaces[$name])) {
-            return $this->interfaces[$name]->executeTransaction($amount, $currency, $description);
+            return $this->interfaces[$name]->executeTransaction($transaction);
         }
         return null;
     }
@@ -55,12 +52,12 @@ class PaymentManager {
     /**
      * Annuler une transaction de paiement via l'interface spécifiée.
      * @param string $name
-     * @param string $transactionId
-     * @return array|null
+     * @param Transaction $transaction
+     * @return Transaction|null
      */
-    public function cancelTransaction($name, $transactionId) {
+    public function cancelTransaction($name, Transaction $transaction) {
         if (isset($this->interfaces[$name])) {
-            return $this->interfaces[$name]->cancelTransaction($transactionId);
+            return $this->interfaces[$name]->cancelTransaction($transaction);
         }
         return null;
     }
