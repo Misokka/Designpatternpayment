@@ -4,11 +4,7 @@ require 'vendor/autoload.php';
 use Jerem\Designpatternpayment\PaymentManager;
 use Jerem\Designpatternpayment\PayPalPayment;
 use Jerem\Designpatternpayment\StripePayment;
-
-/**
- * Fichier index.php
- * Utilisé pour tester les fonctionnalités implémentées et vérifier que les transactions de paiement fonctionnent correctement.
- */
+use Jerem\Designpatternpayment\Transaction;
 
 // Créer une instance de PaymentManager
 $paymentManager = new PaymentManager();
@@ -23,23 +19,25 @@ $stripe = new StripePayment();
 $paymentManager->addInterface('stripe', $stripe);
 $paymentManager->initializeInterface('stripe', ['apiKey' => 'testApiKey']);
 
-// Exécuter une transaction PayPal
-$paypalResult = $paymentManager->executeTransaction('paypal', 100, 'USD', 'Test PayPal Transaction');
+// Créer une transaction PayPal
+$paypalTransaction = new Transaction(100, 'USD', 'Test PayPal Transaction');
+$paypalResult = $paymentManager->executeTransaction('paypal', $paypalTransaction);
 echo "PayPal Transaction Result: ";
 print_r($paypalResult);
 
-// Exécuter une transaction Stripe
-$stripeResult = $paymentManager->executeTransaction('stripe', 200, 'USD', 'Test Stripe Transaction');
+// Créer une transaction Stripe
+$stripeTransaction = new Transaction(200, 'USD', 'Test Stripe Transaction');
+$stripeResult = $paymentManager->executeTransaction('stripe', $stripeTransaction);
 echo "Stripe Transaction Result: ";
 print_r($stripeResult);
 
 // Annuler une transaction PayPal
-$paypalCancelResult = $paymentManager->cancelTransaction('paypal', '12345');
+$paypalCancelResult = $paymentManager->cancelTransaction('paypal', $paypalTransaction);
 echo "PayPal Cancel Transaction Result: ";
 print_r($paypalCancelResult);
 
 // Annuler une transaction Stripe
-$stripeCancelResult = $paymentManager->cancelTransaction('stripe', '67890');
+$stripeCancelResult = $paymentManager->cancelTransaction('stripe', $stripeTransaction);
 echo "Stripe Cancel Transaction Result: ";
 print_r($stripeCancelResult);
 ?>
